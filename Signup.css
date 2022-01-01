@@ -1,0 +1,59 @@
+body{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container{
+    text-align: center;
+    background-color: gainsboro;
+    width: 35%;
+    padding: 30px;
+}
+h1{
+    font-weight: bold;
+}
+.h1{
+    padding: 0px 35px;
+    margin: 0px 40px;
+    font-weight: bold;
+    font-size: 30px;
+    text-decoration: none;
+    color: green;
+}
+.h1:hover{
+    background-image: linear-gradient(to right, rgb(164, 236, 164) , rgb(98, 171, 238));
+    /* color: yellow; */
+}
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+label{
+    margin-top: 20px;
+    font-size: 20px;
+}
+#button{
+    width: 200px;
+    height: 45px;
+    border-radius: 25px;
+    margin-top: 20px;
+    color: green;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+#button:hover{
+    background-image: linear-gradient(to right, rgb(164, 236, 164) , rgb(98, 171, 238));
+}
+.input{
+    font-size: 15px;
+    height: 30px;
+    width: 300px;
+    background-color: #fbff08;
+}
+#account{
+    color: blue;
+}
