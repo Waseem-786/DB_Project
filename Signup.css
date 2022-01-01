@@ -5,6 +5,21 @@ body{
     align-items: center;
     justify-content: center;
 }
+.container::before{
+    content: "";
+    /* background-image: url('pexels-pixabay-301920.jpg'); */
+    /* Position absolute */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    /* Position absolute is set */
+    width: 100vw;
+    height: 100vh;
+    /* It is used to set image under the content */
+    z-index: -1;
+    /* It is used for transparent the image */
+    opacity: 0.9;
+}
 .container{
     text-align: center;
     background-color: gainsboro;
