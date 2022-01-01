@@ -4,11 +4,12 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
+    background-image: linear-gradient(to bottom right, rgb(119, 152, 243), red);
 }
 
 .container{
     text-align: center;
-    background-color: gainsboro;
+    background-image: linear-gradient(to bottom right, rgb(4 251 251),rgb(198 209 26));
     width: 35%;
     padding: 30px;
 }
@@ -24,7 +25,7 @@ h1{
     color: green;
 }
 .h1:hover{
-    background-image: linear-gradient(to right, rgb(164, 236, 164) , rgb(98, 171, 238));
+    background-image: linear-gradient(to right, rgb(231, 156, 156) , rgb(27, 134, 235));
     /* color: yellow; */
 }
 form{
@@ -47,7 +48,7 @@ label{
     cursor: pointer;
 }
 #button:hover{
-    background-image: linear-gradient(to right, rgb(164, 236, 164) , rgb(98, 171, 238));
+    background-image: linear-gradient(to right, rgb(231, 156, 156) , rgb(27, 134, 235));
 }
 .input{
     font-size: 15px;
