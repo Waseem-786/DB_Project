@@ -10,9 +10,6 @@ html{
     display: grid;
     grid-template-columns: 1fr 1.5fr 1fr;
     padding: 20px 0px;
-    /* background-color: red;
-    position: sticky;
-    top: 0px; */
 }
 
 .left {
@@ -76,7 +73,6 @@ html{
     padding: 10px 40px;
     border-radius: 20px;
     background: rgb(0 125 234);
-    /* background-color: black; */
     transition: all ease-in-out 0.5s;
 }
 .navbar .right .list a:hover{
@@ -96,8 +92,9 @@ header::before {
     left: 0px;
     /* Position absolute is set */
     width: 100vw;
-    height: 100%;
+    height: 200vh;
     background-size: cover;
+    background-attachment: fixed;
     /* It is used to set image under the content */
     z-index: -1;
 }
@@ -114,10 +111,19 @@ header .heading{
     font-size: 60px;
 }
 
+
+/* About us */
+
+#After_Home{
+    position: relative;
+    top: 79px;
+    border: 5px solid orange;
+}
 #About_us{
     position: relative;
     top: 79px;
     padding: 10px 50px;
+    background-color: white;
 }
 #About_us #main_heading{
     background-color: blueviolet;
@@ -145,10 +151,17 @@ header .heading{
     height: auto;
 }
 
+/* Team */
+#After_About_us{
+    position: relative;
+    top: 79px;
+    border: 5px solid orange;
+}
 #Team{
     position: relative;
     top: 79px;
     padding: 10px 50px;
+    background-color: black;
 }
 #Team h1{
     text-align: center;
@@ -157,15 +170,13 @@ header .heading{
     background-color: turquoise;
 }
 
-
 #Team .container{
     background-color: black;
     padding: 10px 30px;
-    height: 400px;
-    display: flex;
-    align-items: center;
+    height: 40%;
 }
 #Team .container .row{
+    padding: 10px 30px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 1rem;
@@ -187,6 +198,7 @@ header .heading{
 #Team .container .row .team_member .pic:hover{
     background-color: turquoise;
     border-radius: 50%;
+    
 }
 #Team .container .row .team_member .pic img{
     border-radius: 50%;
@@ -217,20 +229,56 @@ header .heading{
 #Team .container .row .team_member ul li a img{
     width: 70%;
     height: 70%;
-    border-radius: 50%;
+    transition: all ease-in-out 0.5s;
 }
-@media only screen and (max-width: 800px){
+#Team .container .row .team_member ul li a img:hover{
+    border-radius: 50%;
+    background-color: turquoise;
+}
+@media only screen and (max-width: 1000px){
     #Team .container .row{
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-gap: 1rem;
     }
 }
-@media only screen and (max-width: 400px)
+@media only screen and (max-width: 600px)
 {
     #Team .container .row{
         display: grid;
         grid-template-columns: 1fr;
         grid-gap: 1rem;
     }
+}
+#After_Team{
+    position: relative;
+    top: 69px;
+    border: 5px solid orange;
+}
+/* Contact us */
+#Contact_us{
+    position: relative;
+    top: 69px;
+    padding: 10px 50px;
+    background-color: #003A62;
+}
+#Contact_us .container{
+    text-align: center;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1rem;
+}
+#Contact_us .container h1{
+    font-size: 35px;
+    font-family: "Roboto Slab", serif;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+#Contact_us .container .cont p{
+    line-height: 20px;
+}
+#Contact_us .copy_right{
+    text-align: center;
+    margin: 10px 0px;
 }

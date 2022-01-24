@@ -1,32 +1,28 @@
-body{
-    height: 100vh;
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.body{
+    height: 100%;
     width: 100vw;
+    padding: 50px 0px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: linear-gradient(to bottom right, rgb(119, 152, 243), red);
+    background-image: linear-gradient(to bottom right, rgb(98, 131, 221), red);
 }
 
 .container{
     text-align: center;
     background-image: linear-gradient(to bottom right, rgb(4 251 251),rgb(198 209 26));
-    width: 35%;
+    width: 40%;
     padding: 30px;
 }
 h1{
     font-weight: bold;
 }
-.h1{
-    padding: 0px 35px;
-    margin: 0px 40px;
-    font-weight: bold;
-    font-size: 30px;
-    text-decoration: none;
-    color: green;
-}
-.h1:hover{
-    background-image: linear-gradient(to right, rgb(231, 156, 156) , rgb(27, 134, 235));
-    /* color: yellow; */
+hr{
+    margin-top: 20px;
 }
 form{
     display: flex;

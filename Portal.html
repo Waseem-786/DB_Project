@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Portal</title>
+    <link rel="stylesheet" href="Portal.css">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="logo">
+                <img src="LMS Logo.png" alt="Loading" height="70px">
+                <div class="right">
+                    <span id='currentDate'></span>
+                </div>
+        </nav>
+
+        <section>
+            <form action="" method="post" class="login">
+                <h3>Access to the platform</h3>
+                <label for="Email">Email</label>
+                <input type="text" class="input" id="Email" name="Email" placeholder="Enter Your Email">
+        
+                <label for="Password">Password</label>
+                <input type="password" class="input" name="password" id="Password" placeholder="Enter Your Password">
+        
+                <input type="submit" name="button" class="input" id="button" value="Login">
+    
+            </form>
+        </section>
+    </div>
+
+    <script>
+        let t = new Date();
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        document.getElementById("currentDate").innerHTML = monthNames[t.getMonth()] + ", " + t.getDate() + " " + t.getFullYear() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
+    </script>
+
+</body>
+</html>
