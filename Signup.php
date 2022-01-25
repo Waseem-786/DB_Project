@@ -44,7 +44,12 @@
             <input type="number" class="input" name="postal_code" id="postal_code" placeholder="Enter Postal Code">
 
             <label for="Institute">Institute</label>
-            <input type="text" class="input" name="Institute" id="Institute" placeholder="Enter Your Institute name">
+            <select name="Institute" id="Institute" class="input">
+                <option value="none">Choose Institute</option>
+                <option value="H12">NUST_H12</option>
+                <option value="MCS">MCS</option>
+                <option value="EME">EME</option>
+            </select>
 
             <label for="type">Account Type</label>
             <select name="type" id="type" class="input">
@@ -90,7 +95,6 @@
             $email = $_POST['Email'];
             $pass = $_POST['password'];
             $confirm = $_POST['confirm_password'];
-            
             
             $sql = "Execute Insert_Account '$ID','$fname','$lname','$father_name','$age','$num','$city','$country','$postal_code','$institute','$type','$email','$pass','$confirm';";
             $stmt = sqlsrv_query($conn,$sql);
