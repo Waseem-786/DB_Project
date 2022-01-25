@@ -85,8 +85,7 @@ html{
 
 header::before {
     content: "";
-    /* background: url('/DB_Project/library.jpeg') no-repeat; */
-    background: url('/DB_Project/background_image.jpg') no-repeat;
+    background: url('/DB_Project/Images/background_image.jpg') no-repeat;
     position: absolute;
     top: 0px;
     left: 0px;

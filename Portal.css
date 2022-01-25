@@ -19,8 +19,7 @@
 
 section::before{
     content: "";
-    /* background: url('/DB_Project/library.jpeg') no-repeat; */
-    background: url('/DB_Project/LMS2.jpg') no-repeat;
+    background: url('/DB_Project/Images/LMS2.jpg') no-repeat;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -28,8 +27,6 @@ section::before{
     width: 100vw;
     height: 100vh;
     background-size: cover;
-    /* background-attachment: fixed; */
-    /* It is used to set image under the content */
     z-index: -1;
 }
 section{
