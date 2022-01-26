@@ -12,7 +12,7 @@
         <nav>
             <ul>
                 <li id="list-1"><img src="Icons/menu.png" alt="Loading"></li>
-                <li class="list" id="list-2" onmouseover="showtext(2)" onmouseout="hidetext(2)"><a href=""><img
+                <li class="list" id="list-2" onmouseover="showtext(2)" onmouseout="hidetext(2)"><a href="Student_DashBoard.php?email=$email"><img
                             src="Icons/dashboard.png" alt="Loading"></a>
                     <p id="text-2">DashBoard</p>
                 </li>
@@ -58,17 +58,14 @@
             <div class="edit">
                 <span>Waseem Shahzad</span>
                 <div class="input">
+                    <label for="ID">ID Number</label>
+                    <input type="number" name="ID" id="ID">
+
                     <label for="fname">First Name</label>
                     <input type="text" name="fname" id="fname">
 
-                    <label for="mname">Middle Name</label>
-                    <input type="text" name="mname" id="mname">
-
                     <label for="lname">Last Name</label>
                     <input type="text" name="lname" id="lname">
-
-                    <label for="sname">Sur Name</label>
-                    <input type="text" name="sname" id="sname">
 
                     <label for="father_name">Father Name</label>
                     <input type="text" name="father_name" id="father_name">
@@ -87,8 +84,6 @@
                     <label for="pic">Add Picture</label>
                     <input type="file" name="pic" id="pic">
 
-                    <label for="ID">ID Number</label>
-                    <input type="number" name="ID" id="ID">
 
                     <label for="institute">Institute</label>
                     <input type="text" id="institute" name="institute">
@@ -96,23 +91,8 @@
                     <label for="dept">Department</label>
                     <input type="text" name="dept" id="dept">
 
-                    <label for="phone">Phone</label>
-                    <input type="number" name="phone" id="phone">
-
                     <label for="number">Mobile Number</label>
                     <input type="number" name="number" id="number">
-
-                    <label for="add">Address</label>
-                    <input type="number" name="add" id="add">
-
-                    <label for="level">User Level</label>
-                    <input type="text" id="level" name="level">
-
-                    <label for="session">Admission Session</label>
-                    <input type="text" name="session" id="session">
-
-                    <label for="degree_program">Degree Program</label>
-                    <input type="text" name="degree_program" id="degree_program">
 
                     <label for="batch">Batch</label>
                     <input type="text" name="batch" id="batch">

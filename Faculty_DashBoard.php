@@ -54,19 +54,72 @@
                 </div>
                 <div class="profile">
                     <img src="/DB_Project/Images/Ali_Tahir.jpeg" alt="Add Pic">
-                    <span>Waseem Shahzad</span>
+
+<?php
+$email = $_GET['email'];
+
+$ServerName = "WASEEMPC,1433";
+$connectioninfo = array("Database"=>"DB_Project","UID"=>"sa","PWD"=>"344673");
+$conn = sqlsrv_connect($ServerName,$connectioninfo);
+if($conn)
+{
+    $sql = "Select F.FirstName,F.LastName from Faculty as F
+            where F.FacID = (Select A.FacID from Account as A
+                            where A.Email = '$email' AND A.Type ='Faculty');";
+    $stmt = sqlsrv_query($conn,$sql);
+    
+    $name = "";
+    while( $row = sqlsrv_fetch_array($stmt,SQLSRV_FETCH_NUMERIC))
+    {
+        $name = $row[0];
+        $name = $name." ";
+        $name = $name.$row[1];
+        $sql1 = "Select FacID from Faculty where FirstName = '$row[0]'";
+        $stmt1 = sqlsrv_query($conn,$sql1);
+    }
+
+?>      
+                    <span>
+                        <?php echo $name; ?>
+                    </span>
                     <a href="/DB_Project/Edit_Profile.html"><input type="button" value="Edit_Profile"></a>
     
                 </div>
                 <div class="courses">
                     <span>My Classes</span>
                     <div class="subjects">
-                        <div class="subject" id="subject_1">DataBase</div>
-                        <div class="subject" id="subject_2">DataStructure</div>
-                        <div class="subject" id="subject_3">Human Resource Mangement</div>
-                        <div class="subject" id="subject_4">Software Engineering</div>
-                        <div class="subject" id="subject_5">Probability and Statistics</div>
-                        <div class="subject" id="subject_6">Complex Variable and Algorithms</div>
+<?php
+
+while($row1 = sqlsrv_fetch_array($stmt1,SQLSRV_FETCH_NUMERIC))
+{
+    $FacID =  $row1[0];
+}
+
+$sql2 = "Select FS.Batch,FS.Section,C.CrsName,FS.ClassName,FS.Class_Start_Time,FS.Class_end_Time from Fac_Sec as FS
+        inner join Section S
+        on S.Batch = FS.Batch
+        inner join Faculty as F
+        on F.FacID = FS.FacID
+        inner join Fac_Crs as FC
+        on F.FacID = FC.FacID
+        inner join Course as C
+        on C.CrsID = FC.CrsID
+        where FS.FacID = '$FacID';";
+$stmt2 = sqlsrv_query($conn,$sql2);
+while($row2 = sqlsrv_fetch_array($stmt2,SQLSRV_FETCH_NUMERIC))
+{
+?>
+    <div class="subject">
+        <p id="section"><?php echo $row2[0].$row2[1];?></p>
+        <p> Subject : <?php echo $row2[2]; ?></p>
+        <p> Class : <?php echo $row2[3]; ?></p>
+        <p> Class Start Time : <?php echo $row2[4]; ?></p>
+        <p> Credit End Time : <?php echo $row2[5]; ?></p>
+    </div>
+<?php
+}
+}
+?>
                     </div>
                 </div>
                 <div id="Contact_us">

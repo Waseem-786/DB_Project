@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <nav class="logo">
-            <img src="LMS Logo.png" alt="Loading" height="70px">
+            <img src="/DB_Project/Images/LMS Logo.png" alt="Loading" height="70px">
             <div class="right">
                 <span id='currentDate'></span>
             </div>
@@ -62,15 +62,15 @@
         }
         if($radio == 'Faculty')
         {
-            header("Location:Portal.html");
+            header("Location:Portal.php?type=Faculty");
         }
         else if($radio == 'Admin')
         {
-            header("Location:Portal.html");
+            header("Location:Portal.php?type=Admin");
         }
         else if($radio == 'Student')
         {
-            header("Location:Portal.html");
+            header("Location:Portal.php?type=Student");
         }
         else
         {

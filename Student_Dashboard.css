@@ -124,10 +124,19 @@ section{
     grid-gap: 2rem;
 }
 .courses .subjects .subject{
-    text-align: center;
     background-color: rgb(125, 10, 255);
+    height: 200px;
+}
+.courses .subjects .subject p{
     color: white;
-    height: 150px;
+    margin: 7px;
+    font-size: 20px;
+    text-align: left;
+}
+.courses .subjects .subject #Crs{
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
 }
 
 

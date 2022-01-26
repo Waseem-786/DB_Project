@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student DashBoard</title>
-    <link rel="stylesheet" href="Student_Dashboard.css">
+    <title>Admin_DashBoard</title>
+    <link rel="stylesheet" href="Admin_DashBoard.css">
 </head>
 
 <body>
@@ -27,8 +27,8 @@
                     <p id="text-4">Calender</p>
                 </li>
                 <li class="list" id="list-5" onmouseover="showtext(5)" onmouseout="hidetext(5)"><a href=""><img
-                            src="Icons/education.png" alt="Loading"></a>
-                    <p id="text-5">My Courses</p>
+                            src="Icons/attendance.png" alt="Loading"></a>
+                    <p id="text-5">Attendance</p>
                 </li>
                 <li class="list" id="list-6" onmouseover="showtext(6)" onmouseout="hidetext(6)"><a href=""><img
                             src="Icons/result.png" alt="Loading"></a>
@@ -36,8 +36,8 @@
                 </li>
 
                 <li class="list" id="list-7" onmouseover="showtext(7)" onmouseout="hidetext(7)"><a href=""><img
-                            src="Icons/files.png" alt="Loading"></a>
-                    <p id="text-7">Private Files</p>
+                            src="Icons/feedback.png" alt="Loading"></a>
+                    <p id="text-7">Feedback</p>
                 </li>
             </ul>
         </nav>
@@ -54,20 +54,52 @@
                 </div>
             </div>
             <div class="profile">
-                <img src="/DB_Project/Images/image1.jpg" alt="Add Pic">
-                <span>Waseem Shahzad</span>
+                <img src="/DB_Project/Images/Ali_Tahir.jpeg" alt="Add Pic">
+
+<?php
+$email = $_GET['email'];
+$ServerName = "WASEEMPC,1433";
+$connectioninfo = array("Database"=>"DB_Project","UID"=>"sa","PWD"=>"344673");
+$conn = sqlsrv_connect($ServerName,$connectioninfo);
+if($conn)
+{
+    $sql = "Select Ad.FirstName,Ad.LastName from Admin as Ad
+            where Ad.AdID = (Select A.AdID from Account as A
+                            where A.Email = '$email' AND A.Type ='Admin');";
+    $stmt = sqlsrv_query($conn,$sql);
+    
+    $name = "";
+    while( $row = sqlsrv_fetch_array($stmt,SQLSRV_FETCH_NUMERIC))
+    {
+        $name = $row[0];
+        $name = $name." ";
+        $name = $name.$row[1];
+    }
+}
+?>
+                <span>
+                    <?php echo $name; ?>
+                </span>
                 <a href="/DB_Project/Edit_Profile.html"><input type="button" value="Edit_Profile"></a>
 
             </div>
             <div class="courses">
-                <span>Course Overview</span>
+                <span>My Working</span>
                 <div class="subjects">
-                    <div class="subject" id="subject_1">DataBase</div>
-                    <div class="subject" id="subject_2">DataStructure</div>
-                    <div class="subject" id="subject_3">Human Resource Mangement</div>
-                    <div class="subject" id="subject_4">Software Engineering</div>
-                    <div class="subject" id="subject_5">Probability and Statistics</div>
-                    <div class="subject" id="subject_6">Complex Variable and Algorithms</div>
+                    <div class="subject" id="subject_1"><a href="Student_Record.php">Student records</a></div>
+                    <div class="subject" id="subject_2"><a href="Faculty_Record.php">Faculty records</a></div>
+                    <div class="subject" id="subject_3"><a href="Admin_Record.php">Admin records</a></div>
+                    <div class="subject" id="subject_4"><a href="Signup.php">Create Account</a></div>
+                    <div class="subject" id="subject_5"><a href="Delete_Account.php">Delete Account</a></div>
+                    <div class="subject" id="subject_6"><a href="Add_Course.php">Add Course</a> </div>
+                    <div class="subject" id="subject_7"><a href="Course_Record.php">Courses Records</a> </div>
+                    <div class="subject" id="subject_8"><a href="Student_Enroll_in_Course.php">Student Enrollment in Courses</a> </div>
+                    <div class="subject" id="subject_9"><a href="Std-Crs_Record.php">Student Courses Relation</a> </div>
+                    <div class="subject" id="subject_10"><a href="Add_Department.php">Add Department</a> </div>
+                    <div class="subject" id="subject_11"><a href="Add_Batch.php">Add Batch</a> </div>
+                    <div class="subject" id="subject_12"><a href="Add_Section.php">Add Section</a> </div>
+                    <div class="subject" id="subject_13"><a href="Class_Course_Assign_to_Faculty.php">Classes/Courses Assigned to Faculty</a> </div>
+                    <div class="subject" id="subject_13"><a href="Fac-Sec_Record.php">Class Faculty Relation</a> </div>
                 </div>
             </div>
             <div id="Contact_us">
@@ -155,8 +187,6 @@
             }
         }
     </script>
-
-
 
 </body>
 

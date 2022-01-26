@@ -40,6 +40,46 @@
 
         document.getElementById("currentDate").innerHTML = monthNames[t.getMonth()] + ", " + t.getDate() + " " + t.getFullYear() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
     </script>
+    <?php
+        $type = $_GET['type'];  //From Account Type file Get Selected value.
+        
+        $ServerName = "WASEEMPC,1433";
+        $connectioninfo = array("Database"=>"DB_Project","UID"=>"sa","PWD"=>"344673");
+        $conn = sqlsrv_connect($ServerName,$connectioninfo);
+        if($conn)
+        {
+            if(isset($_POST['button']))
+            {
+                $email = $_POST['Email'];
+                $pass = $_POST['password'];
+                
+                $sql = "Select * from Account
+                        where Email = '$email' AND Password = '$pass' AND Type = '$type'";
+                $stmt = sqlsrv_query($conn,$sql);
 
+                if(sqlsrv_fetch($stmt) == true)
+                {
+                    if($type == 'Student')
+                        header("Location:Student_DashBoard.php?email=$email");
+                    else if($type == 'Faculty')
+                        header("Location:Faculty_DashBoard.php?email=$email");
+                    else
+                        header("Location:Admin_DashBoard.php?email=$email");
+                }
+                else
+                {
+                    ?>
+                    <style>
+                        .incorrect{
+                            color: red;
+                            margin: -80px 0px 0px 70%;
+                        }
+                    </style>
+                    <p class='incorrect'><?php echo "Email or Password is Incorrect"; ?></p> 
+                    <?php
+                }
+            }
+        }
+    ?>
 </body>
 </html>

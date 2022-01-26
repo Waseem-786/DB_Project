@@ -131,18 +131,20 @@ section{
     justify-content: center;
     align-items: center;
     background-color: rgb(125, 10, 255);
-    height: 150px;
+    height: 200px;
 }
 .courses .subjects .subject a{
-    /* color: white; */
+    width: 70%;
+    text-align: center;
     text-decoration: none;
     background-color: white;
-    /* border: 5px solid red; */
     padding: 10px;
     border-radius: 20px;
     font-size: 25px;
 }
-
+.courses .subjects .subject a:hover{
+    background-color: black;
+}
 
 /* Contact us */
 #Contact_us{

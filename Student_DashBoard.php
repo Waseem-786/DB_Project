@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin_DashBoard</title>
-    <link rel="stylesheet" href="Admin_DashBoard.css">
+    <title>Student DashBoard</title>
+    <link rel="stylesheet" href="Student_Dashboard.css">
 </head>
 
 <body>
@@ -27,8 +27,8 @@
                     <p id="text-4">Calender</p>
                 </li>
                 <li class="list" id="list-5" onmouseover="showtext(5)" onmouseout="hidetext(5)"><a href=""><img
-                            src="Icons/attendance.png" alt="Loading"></a>
-                    <p id="text-5">Attendance</p>
+                            src="Icons/education.png" alt="Loading"></a>
+                    <p id="text-5">My Courses</p>
                 </li>
                 <li class="list" id="list-6" onmouseover="showtext(6)" onmouseout="hidetext(6)"><a href=""><img
                             src="Icons/result.png" alt="Loading"></a>
@@ -36,8 +36,8 @@
                 </li>
 
                 <li class="list" id="list-7" onmouseover="showtext(7)" onmouseout="hidetext(7)"><a href=""><img
-                            src="Icons/feedback.png" alt="Loading"></a>
-                    <p id="text-7">Feedback</p>
+                            src="Icons/files.png" alt="Loading"></a>
+                    <p id="text-7">Private Files</p>
                 </li>
             </ul>
         </nav>
@@ -54,21 +54,76 @@
                 </div>
             </div>
             <div class="profile">
-                <img src="/DB_Project/Images/Ali_Tahir.jpeg" alt="Add Pic">
-                <span>Amad Usmani</span>
-                <a href="/DB_Project/Edit_Profile.html"><input type="button" value="Edit_Profile"></a>
+                <img src="/DB_Project/Images/image1.jpg" alt="Add Pic">
+
+
+<?php
+$email = $_GET['email'];
+
+$ServerName = "WASEEMPC,1433";
+$connectioninfo = array("Database"=>"DB_Project","UID"=>"sa","PWD"=>"344673");
+$conn = sqlsrv_connect($ServerName,$connectioninfo);
+if($conn)
+{
+    $sql = "Select S.FirstName,S.LastName from Student as S
+            where S.StdID = (Select A.StdID from Account as A
+                            where A.Email = '$email' AND A.Type ='Student');";
+    $stmt = sqlsrv_query($conn,$sql);
+    
+    $name = "";
+    while( $row = sqlsrv_fetch_array($stmt,SQLSRV_FETCH_NUMERIC))
+    {
+        $name = $row[0];
+        $name = $name." ";
+        $name = $name.$row[1];
+        $sql1 = "Select StdID from Student where FirstName = '$row[0]'";
+        $stmt1 = sqlsrv_query($conn,$sql1);
+    }
+
+?>                
+                <span>
+                    <?php echo $name; ?>
+                </span>
+                <a href="/DB_Project/Student_Edit_Profile.php"><input type="button" value="Edit_Profile"></a>
 
             </div>
             <div class="courses">
-                <span>My Working</span>
+                <span>Enrolled Sujects/Courses</span>
                 <div class="subjects">
-                    <div class="subject" id="subject_1"><a href="Student_Record.php">Student records</a></div>
-                    <div class="subject" id="subject_2"><a href="Faculty_Record.php">Faculty records</a></div>
-                    <div class="subject" id="subject_3"><a href="Admin_Record.php">Admin records</a></div>
-                    <div class="subject" id="subject_4"><a href="Signup.php">Create Account</a></div>
-                    <div class="subject" id="subject_5"><a href="Delete_Account.php">Delete Account</a></div>
-                    <div class="subject" id="subject_6"><a href="Add_Course.html">Add Course</a> </div>
-                    <div class="subject" id="subject_7"><a href="">Classes</a> </div>
+<?php
+
+while($row1 = sqlsrv_fetch_array($stmt1,SQLSRV_FETCH_NUMERIC))
+{
+    $StdID =  $row1[0];
+}
+
+$sql2 = "Select C.CrsName,C.CreditHours,F.FirstName,F.LastName,FS.ClassName,FS.Class_Start_Time,
+        FS.Class_end_Time from Course as C
+        inner join Std_Crs SC
+        on SC.CrsID = C.CrsID
+        inner join Fac_Crs as FC
+        on C.CrsID = FC.CrsID
+        inner join Faculty as F
+        on F.FacID = FC.FacID
+        inner join Fac_Sec as FS
+        on FS.FacID = F.FacID
+        where SC.StdID = '$StdID';";
+$stmt2 = sqlsrv_query($conn,$sql2);
+while($row2 = sqlsrv_fetch_array($stmt2,SQLSRV_FETCH_NUMERIC))
+{
+?>
+    <div class="subject">
+        <p id="Crs"><?php echo $row2[0];?></p>
+        <p> Credit Hours : <?php echo $row2[1]; ?></p>
+        <p> Instructor : <?php echo $row2[2]." ".$row2[3]; ?></p>
+        <p> Class Name : <?php echo $row2[4]; ?></p>
+        <p> Start Time : <?php echo $row2[5]; ?></p>
+        <p> End Time : <?php echo $row2[6]; ?></p>
+    </div>
+<?php
+}
+}
+?>
                 </div>
             </div>
             <div id="Contact_us">
@@ -156,6 +211,8 @@
             }
         }
     </script>
+
+
 
 </body>
 

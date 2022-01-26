@@ -157,11 +157,11 @@ if($conn)
                     die( print_r( sqlsrv_errors(), true) );
                 }
                 sqlsrv_query($conn,"Alter Table Student
-                Alter Column Age varchar(10)");
+                Alter Column Age int");
                 sqlsrv_query($conn,"Alter Table Student
-                Alter Column PostalCode varchar(20)");
+                Alter Column PostalCode int");
                 sqlsrv_query($conn,"Alter Table Student
-                Alter Column DOB varchar(20)");
+                Alter Column DOB Date");
         }
 }
 ?>
