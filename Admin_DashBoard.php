@@ -48,43 +48,45 @@
                     <span id='currentDate'></span>
                 </div>
             </div>
-            <div class="profile">
-                <img src="/DB_Project/Images/Ali_Tahir.jpeg" alt="Add Pic">
-                
-                <?php
-                $email = $_GET['email'];
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "DB_Project";
-                
-                // Create connection
-                $conn = new mysqli($servername, $username, $password, $dbname);
-                
-                // Check connection
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-                
-                $sql = "SELECT Ad.FirstName, Ad.LastName FROM Admin AS Ad
-                        WHERE Ad.AdID = (SELECT A.AdID FROM Account AS A
-                                        WHERE A.Email = '$email' AND A.Type ='Admin')";
-                
-                $result = $conn->query($sql);
-                $name = "";
-                
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $name = $row["FirstName"] . " " . $row["LastName"];
-                    }
-                }
-                $conn->close();
-                ?>
-                <span>
-                    <?php echo $name; ?>
-                </span>
-                <a href="/DB_Project/Edit_Profile.html"><input type="button" value="Edit_Profile"></a>
+<?php
+$email = $_GET['email'];
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "DB_Project";
 
+// Connect to MySQL
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+$sql3 = "SELECT Ad_Image FROM Admin Ad
+INNER JOIN Account A ON A.AdID = Ad.AdID
+WHERE A.Email = '$email' AND A.type = 'Admin'";
+$result3 = mysqli_query($conn, $sql3);
+$row3 = mysqli_fetch_array($result3);
+
+$sql = "SELECT Ad.FirstName, Ad.LastName FROM Admin AS Ad
+WHERE Ad.AdID = (SELECT A.AdID FROM Account AS A
+                WHERE A.Email = '$email' AND A.Type ='Admin')";
+$stmt = mysqli_query($conn, $sql);
+$name = "";
+
+if ($stmt->num_rows > 0) {
+while ($row = $stmt->fetch_assoc()) {
+$name = $row["FirstName"] . " " . $row["LastName"];
+}
+}
+
+?>            
+            <div class="profile">
+                <img src="<?php echo $row3[0]; ?>" alt="Add Pic">
+                <span><?php echo $name; ?></span>
+                <a href="/DB_Project/Admin_Edit_Profile.php?type=Admin&email=<?php echo $email; ?>">
+                <input type="button" value="Edit Profile">
+                </a>              
             </div>
             <div class="courses">
                 <span>My Working</span>
