@@ -7,10 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Type</title>
     <link rel="stylesheet" href="Account_Type.css">
-        
 </head>
 
 <body>
+    <?php
+        include("createTables.php");
+    ?>
     <div class="container">
         <nav class="logo">
             <img src="/DB_Project/Images/LMS Logo.png" alt="Loading" height="70px">
@@ -39,15 +41,11 @@
         </section>
     </div>
 
-
     <script>
         let t = new Date();
-
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
         document.getElementById("currentDate").innerHTML = monthNames[t.getMonth()] + ", " + t.getDate() + " " + t.getFullYear() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
     </script>
-
 
     <?php
     if(isset($_POST['button']))
@@ -77,8 +75,9 @@
             echo "<p class='php'>$radio</p>";
         }
     }
-    
     ?>
+    
 </body>
 
 </html>
+

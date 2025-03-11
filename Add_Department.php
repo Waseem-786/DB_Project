@@ -26,33 +26,38 @@
                 <input type="text" class="input" id="location" name="location" placeholder="Enter Department Locatin">
                 
                 <input type="submit" name="button" class="input" id="button" value="Add Department">
-                <a href="Admin_DashBoard.php" id="account">Don't Want to add Department</a>
+                <a href="Admin_DashBoard.php?email=<?php echo $_GET['email']; ?>" id="account">Don't Want to add Department</a>
             </form>
         </div>
     </div>
 
 <?php
-    
-$serverName = "WaseemPC,1433";
-$connectioninfo = array("DataBase"=>"DB_Project" , "UID"=>"sa", "PWD"=>"344673");
-$conn = sqlsrv_connect( $serverName, $connectioninfo );
-  
-if($conn)
-{
-    if(isset($_POST['button']))
-    {
-        $DID = $_POST['DID'];
-        $name = $_POST['name'];
-        $location = $_POST['location'];
+$serverName = "localhost"; // Change this to your MySQL server name if different
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$database = "DB_Project"; // Your MySQL database name
 
-        $sql = "insert into Department values('$DID','$name','$location');";
-        $stmt = sqlsrv_query($conn,$sql);
-    }
-    else
-    {
-        die(print_r(sqlsrv_errors(),true));
+// Establish connection
+$conn = mysqli_connect($serverName, $username, $password, $database);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+if (isset($_POST['button'])) {
+    $DID = mysqli_real_escape_string($conn, $_POST['DID']);
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $location = mysqli_real_escape_string($conn, $_POST['location']);
+
+    $sql = "INSERT INTO Department (DeptID, Deptname, Deptlocation) VALUES ('$DID', '$name', '$location')";
+    $stmt = mysqli_query($conn, $sql);
+
+    if (!$stmt) {
+        die("Query failed: " . mysqli_error($conn));
     }
 }
+
+mysqli_close($conn);
 ?>
     
                 

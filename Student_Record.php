@@ -36,135 +36,81 @@
                 <th>Section</th>
                 <th>Date of Birth</th>
                 <th>Email</th>
+                <th>Department</th>
             </tr>
 
-<?php
 
-$serverName = "WaseemPC";
-$connectioninfo = array("DataBase"=>"DB_Project" , "UID"=>"sa", "PWD"=>"344673");
-$conn = sqlsrv_connect( $serverName, $connectioninfo );
+            <?php
+$serverName = "localhost"; // Change this to your MySQL server name if different
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$database = "DB_Project"; // Your MySQL database name
 
-if($conn)
-{
-    if(isset($_POST['submit'])==false)  //Default and Show All Condition
-    {
+// Establish connection
+$conn = mysqli_connect($serverName, $username, $password, $database);
 
-        $sql = "Select S.StdID,FirstName,LastName,FatherName,age,Mobile_Number,City,Country,PostalCode,Institute,DOB,Batch,Section,Email from Student as S 
-        inner join Account as A
-        on S.StdID = A.StdID";
-        $stmt = sqlsrv_query($conn,$sql);
-        if($stmt)
-        {
-            while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_NUMERIC) )
-            {
-    
-?>
-                <tr class='row'>
-                    <th><?php echo $row[0]; ?></th>
-                    <th><?php echo $row[1]; ?></th>
-                    <th><?php echo $row[2]; ?></th>
-                    <th><?php echo $row[3]; ?></th>
-                    <th><?php echo $row[4]; ?></th>
-                    <th><?php echo $row[5]; ?></th>
-                    <th><?php echo $row[6]; ?></th>
-                    <th><?php echo $row[7]; ?></th>
-                    <th><?php echo $row[8]; ?></th>
-                    <th><?php echo $row[9]; ?></th>
-                    <th><?php echo $row[10]; ?></th>
-                    <th><?php echo $row[11]; ?></th>
-                    <th><?php echo $row[12]; ?></th>
-                    <th><?php echo $row[13]; ?></th>
-                </tr>
-
-<?php
-            }
-        }
-        else
-        {
-            die( print_r( sqlsrv_errors(), true) );
-        }
-    }
-?>
-
-
-<?php
-    if(isset($_POST['submit']))
-        {
-            $search = $_POST['search'];
-
-            sqlsrv_query($conn,"Alter Table Student
-            Alter Column Age varchar(10)");
-            sqlsrv_query($conn,"Alter Table Student
-            Alter Column PostalCode varchar(20)");
-            sqlsrv_query($conn,"Alter Table Student
-            Alter Column DOB varchar(20)");
-
-            $sql1 = "Select S.StdID,FirstName,LastName,FatherName,age,Mobile_Number,City,Country,PostalCode,Institute,DOB,Batch,Section,Email from Student as S 
-            inner join Account as A
-            on S.StdID = A.StdID
-            where 
-            S.StdID = '$search' OR 
-            FirstName = '$search' OR 
-            LastName = '$search' OR 
-            FatherName = '$search' OR  
-            Mobile_Number = '$search' OR 
-            City = '$search' OR 
-            Country = '$search' OR  
-            A.Email = '$search' OR 
-            Institute = '$search' OR 
-            Batch = '$search' OR 
-            Section = '$search' OR
-            Age = '$search' OR
-            PostalCode = '$search' OR
-            DOB = '$search';";
-            
-            $stmt1 = sqlsrv_query($conn,$sql1);
-
-                if($stmt1==true)
-                {
-?>
-            <style>
-                .row {
-                    display: none;
-                }
-            </style>
-<?php                    
-                    while( $row = sqlsrv_fetch_array( $stmt1, SQLSRV_FETCH_NUMERIC) )
-                    {
-?>
-            <tr class='search'>
-                <th><?php echo $row[0]; ?></th>
-                <th><?php echo $row[1]; ?></th>
-                <th><?php echo $row[2]; ?></th>
-                <th><?php echo $row[3]; ?></th>
-                <th><?php echo $row[4]; ?></th>
-                <th><?php echo $row[5]; ?></th>
-                <th><?php echo $row[6]; ?></th>
-                <th><?php echo $row[7]; ?></th>
-                <th><?php echo $row[8]; ?></th>
-                <th><?php echo $row[9]; ?></th>
-                <th><?php echo $row[10]; ?></th>
-                <th><?php echo $row[11]; ?></th>
-                <th><?php echo $row[12]; ?></th>
-                <th><?php echo $row[13]; ?></th>
-            </tr>
-
-<?php
-                    }
-                }
-                else
-                {
-                    die( print_r( sqlsrv_errors(), true) );
-                }
-                sqlsrv_query($conn,"Alter Table Student
-                Alter Column Age int");
-                sqlsrv_query($conn,"Alter Table Student
-                Alter Column PostalCode int");
-                sqlsrv_query($conn,"Alter Table Student
-                Alter Column DOB Date");
-        }
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
+
+if (!isset($_POST['submit'])) { // Default and Show All Condition
+    $sql = "SELECT S.StdID, FirstName, LastName, FatherName, Age, Mobile_Number, City, Country, PostalCode, Institute, DOB, Batch, Section, Email, S.DeptId 
+            FROM Student AS S 
+            INNER JOIN Account AS A ON S.StdID = A.StdID";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+        while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
+            echo "<tr class='row'>";
+            foreach ($row as $cell) {
+                echo "<th>$cell</th>";
+            }
+            echo "</tr>";
+        }
+    } else {
+        die("Query failed: " . mysqli_error($conn));
+    }
+}
+
+if (isset($_POST['submit'])) {
+    $search = mysqli_real_escape_string($conn, $_POST['search']);
+
+    $sql1 = "SELECT S.StdID, FirstName, LastName, FatherName, Age, Mobile_Number, City, Country, PostalCode, Institute, DOB, Batch, Section, Email 
+             FROM Student AS S 
+             INNER JOIN Account AS A ON S.StdID = A.StdID 
+             WHERE S.StdID = '$search' OR 
+                   FirstName = '$search' OR 
+                   LastName = '$search' OR 
+                   FatherName = '$search' OR  
+                   Mobile_Number = '$search' OR 
+                   City = '$search' OR 
+                   Country = '$search' OR  
+                   A.Email = '$search' OR 
+                   Institute = '$search' OR 
+                   Batch = '$search' OR 
+                   Section = '$search' OR
+                   Age = '$search' OR
+                   PostalCode = '$search' OR
+                   DOB = '$search'";
+
+    $result1 = mysqli_query($conn, $sql1);
+
+    if ($result1) {
+        while ($row = mysqli_fetch_array($result1, MYSQLI_NUM)) {
+            echo "<tr class='search'>";
+            foreach ($row as $cell) {
+                echo "<th>$cell</th>";
+            }
+            echo "</tr>";
+        }
+    } else {
+        die("Query failed: " . mysqli_error($conn));
+    }
+}
+
+mysqli_close($conn);
 ?>
+
         </Table>
     </div>
 </body>

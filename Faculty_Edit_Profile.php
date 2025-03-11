@@ -14,7 +14,7 @@
             <ul>
                 <li id="list-1"><img src="Icons/menu.png" alt="Loading"></li>
                     
-                <li class="list" id="list-2" onmouseover="showtext(2)" onmouseout="hidetext(2)"><a href="Student_DashBoard.php?email=<?php echo $_GET['email']; ?>"><img
+                <li class="list" id="list-2" onmouseover="showtext(2)" onmouseout="hidetext(2)"><a href="Faculty_DashBoard.php?email=<?php echo $_GET['email']; ?>"><img
                                 src="Icons/dashboard.png" alt="Loading"></a>
                         <p id="text-2">DashBoard</p>
                     </li>
@@ -47,6 +47,7 @@
             <!-- This is Section -->
             <div class="logo">
 
+            
                 <img src="/DB_Project/Images/LMS Logo.png" alt="Loading">
 
                 <div class="right">
@@ -68,21 +69,22 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
-$sql3 = "SELECT Std_Image FROM Student AS S
-         INNER JOIN Account AS A ON A.StdID = S.StdID
-         WHERE A.Email = '$email' AND A.type = 'Student'";
-$stmt3 = mysqli_query($conn, $sql3);
-$row3 = mysqli_fetch_array($stmt3);
+$sql3 = "SELECT Fac_Image FROM Faculty F
+        INNER JOIN Account A ON A.FacID = F.FacID
+        WHERE A.Email = '$email' AND A.type = 'Faculty'";
+$result3 = mysqli_query($conn, $sql3);
+$row3 = mysqli_fetch_array($result3);
 
-$sql4 = "SELECT S.FirstName, S.LastName FROM Student AS S
-         WHERE S.StdID = (SELECT A.StdID FROM Account AS A WHERE A.Email = '$email' AND A.Type ='Student')";
-$stmt4 = mysqli_query($conn, $sql4);
+$sql4 = "SELECT F.FirstName, F.LastName FROM Faculty F
+        WHERE F.FacID = (SELECT A.FacID FROM Account A
+                         WHERE A.Email = '$email' AND A.Type ='Faculty')";
+$result4 = mysqli_query($conn, $sql4);
 
 $name = "";
-while ($row4 = mysqli_fetch_assoc($stmt4)) {
-    $name = $row4['FirstName'] . " " . $row4['LastName'];
-}  
-?>
+while ($row4 = mysqli_fetch_array($result4, MYSQLI_NUM)) {
+    $name = $row4[0] . " " . $row4[1];
+}
+?>     
                     
                 <img src="<?php echo $row3[0]; ?>" alt="Add Pic">
                 <span><?php echo $name; ?></span>
@@ -94,11 +96,11 @@ while ($row4 = mysqli_fetch_assoc($stmt4)) {
 
 <?php
 $type = $_GET['type'];
-$sql = "SELECT FirstName, LastName, FatherName, Age, Mobile_Number, City, Country, PostalCode, Std_Image, Institute, Batch, Section, S.DOB, A.Email FROM Student AS S 
-INNER JOIN Account AS A ON A.StdID = S.StdID 
-WHERE email = '$email' AND type = '$type'";
-$stmt = mysqli_query($conn, $sql);
-$row = mysqli_fetch_array($stmt,MYSQLI_NUM);
+$sql = "SELECT FirstName, LastName, FatherName, Age, Mobile_Number, City, Country, PostalCode, Fac_Image, Institute, DOB, A.Email FROM Faculty F
+        INNER JOIN Account A ON A.FacID = F.FacID
+        WHERE email = '$email' AND type = '$type'";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result, MYSQLI_NUM);
 ?>
 
 
@@ -133,17 +135,12 @@ $row = mysqli_fetch_array($stmt,MYSQLI_NUM);
                     
                     <label for="institute">Institute</label>
                     <input type="text" id="institute" name="institute" value="<?php echo $row[9]; ?>">
-                    
-                    <label for="batch">Batch</label>
-                    <input type="text" name="batch" id="batch" value="<?php echo $row[10]; ?>">
-                    
-                    <label for="section">Section</label>
-                    <input type="text" name="section" id="section" value="<?php echo $row[11]; ?>">                    
+                 
                     <label for="DOB">Date of Birth</label>
-                    <input type="date" name="DOB" id="DOB" value="<?php echo $row[12]; ?>">
+                    <input type="date" name="DOB" id="DOB" value="<?php echo $row[10]; ?>">
                     
                     <label for="email">Email Address</label>
-                    <input type="email" name="email" id="email" value="<?php echo $row[13]; ?>">
+                    <input type="email" name="email" id="email" value="<?php echo $row[11]; ?>">
                     
                     <input type="submit" name="button" id="button" value="Update">
                 </from>
@@ -152,10 +149,10 @@ $row = mysqli_fetch_array($stmt,MYSQLI_NUM);
     </div>
 <?php
     if(isset($_POST['button']))
-    {	   
-        $sql1 = "SELECT StdID FROM Student WHERE FirstName = '$row[0]'";
-        $stmt = mysqli_query($conn, $sql1);
-        $StdID = mysqli_fetch_assoc($stmt)['StdID'];
+    {
+        $sql1 = "SELECT FacID FROM Faculty WHERE FirstName = '$row[0]'";
+        $result = mysqli_query($conn, $sql1);
+        $FacID = mysqli_fetch_array($result);
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
         $father_name = $_POST['father_name'];
@@ -166,32 +163,20 @@ $row = mysqli_fetch_array($stmt,MYSQLI_NUM);
         $postal_code = $_POST['postal_code'];
         $Img = $_POST['pic'];
         $institute = $_POST['institute'];
-        $batch = $_POST['batch'];
-        $section = $_POST['section'];
         $DOB = $_POST['DOB'];
         $email_1 = $_POST['email'];
 
-        $ImgPath = "/DB_Project/Images/".$Img;
-        
-        // Update Student Table
-        $sql3 = "UPDATE Student 
-             SET FirstName='$fname', LastName='$lname', FatherName='$father_name', Age=$age, 
-                 Mobile_Number='$num', City='$city', Country='$country', PostalCode='$postal_code', 
-                 Std_Image='$ImgPath', Institute='$institute', Batch='$batch', Section='$section', DOB='$DOB' 
-             WHERE StdID='$StdID'";
+        $Img = "/DB_Project/Images/".$Img;
 
-        $stmt3 = mysqli_query($conn, $sql3);
+        // sqlsrv_configure('WarningsReturnAsErrors',0);
 
-        // Update Account Table
-        $sql5 = "UPDATE Account SET Email='$email_1' WHERE StdID='$StdID'";
-        $stmt5 = mysqli_query($conn, $sql5);
- 
-        if ($stmt3 && $stmt5) {
-            echo "<script>alert('Profile Updated Successfully');</script>";
-        } else {
-            echo "Error: " . mysqli_error($conn);
-        }
+
     
+        $sql3 = "UPDATE Faculty SET FirstName = '$fname', LastName = '$lname', FatherName='$father_name', Age= $age, Mobile_Number='$num', City='$city', Country='$country', PostalCode = '$postal_code', Fac_Image = '$Img', DOB = '$DOB', Institute = '$institute' WHERE FacID = '$FacID[0]'";
+        mysqli_query($conn, $sql3);
+    
+        $sql5 = "UPDATE Account SET Email = '$email_1' WHERE FacID = '$FacID[0]'";
+        mysqli_query($conn, $sql5);
     }
     mysqli_close($conn);
 ?>

@@ -33,7 +33,7 @@
             <input type="password" class="input" name="password" id="Password" placeholder="Enter Your Password">
             
             <input type="submit" name="button" class="input" id="button" value="Delete">
-            <a href="Admin_DashBoard.html" id="account">Don't want to delete</a>
+            <a href="Admin_DashBoard.php?email=<?php echo $_GET['email']; ?>" id="account">Don't want to delete</a>
         </form>
     </div>
 </div>
@@ -55,7 +55,7 @@
             
             if($stmt==true)
             {
-                header("Location: Admin_Dashboard.html");
+                header("Location: Admin_Dashboard.php");
             }
             else
             {

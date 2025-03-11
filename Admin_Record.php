@@ -1,3 +1,57 @@
+<?php
+$serverName = "localhost";
+$username = "root";
+$password = "";
+$database = "DB_Project";
+
+// Establish connection
+$conn = mysqli_connect($serverName, $username, $password, $database);
+
+if (!$conn) {
+    echo "<script>alert('Connection failed: " . mysqli_connect_error() . "');</script>";
+    exit();
+}
+
+$records = [];
+if (!isset($_POST['submit'])) { // Default and Show All Condition
+    $sql = "SELECT Ad.AdID, Ad.FirstName, Ad.LastName, Ad.FatherName, Ad.age, Ad.Mobile_Number, Ad.City, Ad.Country, Ad.PostalCode, Ad.Institute, Ad.DOB, A.Email 
+            FROM Admin AS Ad
+            INNER JOIN Account AS A ON Ad.AdID = A.AdID";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+        while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
+            $records[] = $row;
+        }
+    } else {
+        echo "Query failed: " . mysqli_error($conn);
+    }
+}
+
+if (isset($_POST['submit'])) {
+    $search = mysqli_real_escape_string($conn, $_POST['search']);
+
+    $sql1 = "SELECT Ad.AdID, Ad.FirstName, Ad.LastName, Ad.FatherName, Ad.age, Ad.Mobile_Number, Ad.City, Ad.Country, Ad.PostalCode, Ad.Institute, Ad.DOB, A.Email 
+             FROM Admin AS Ad
+             INNER JOIN Account AS A ON Ad.AdID = A.AdID
+             WHERE Ad.AdID = '$search' OR FirstName = '$search' OR LastName = '$search' OR FatherName = '$search' OR  
+                   Mobile_Number = '$search' OR City = '$search' OR Country = '$search' OR A.Email = '$search' OR 
+                   Institute = '$search' OR Age = '$search' OR PostalCode = '$search' OR DOB = '$search'";
+    
+    $result1 = mysqli_query($conn, $sql1);
+
+    if ($result1) {
+        while ($row = mysqli_fetch_array($result1, MYSQLI_NUM)) {
+            $records[] = $row;
+        }
+    } else {
+        echo "Query failed: " . mysqli_error($conn);
+    }
+}
+
+mysqli_close($conn);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,144 +72,38 @@
             </form>
         </div>
 
-        <Table>
-                <tr id='Main'>
-                    <th>Admin ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Father Name</th>
-                    <th>Age</th>
-                    <th>Mobile Number</th>
-                    <th>City</th>
-                    <th>Country</th>
-                    <th>Postal Code</th>
-                    <th>Institute</th>
-                    <th>Date of Birth</th>
-                    <th>Email</th>
-                </tr>
-
-<?php
-
-$serverName = "WaseemPC";
-$connectioninfo = array("DataBase"=>"DB_Project" , "UID"=>"sa", "PWD"=>"344673");
-$conn = sqlsrv_connect( $serverName, $connectioninfo );
-
-if($conn)
-{
-    if(isset($_POST['submit'])==false)  //Default and Show All Condition
-    {
-        $sql = "Select Ad.AdID,FirstName,LastName,FatherName,age,Mobile_Number,City,Country,PostalCode,Institute,DOB,Email from Admin as Ad
-        inner join Account as A
-        on Ad.AdID = A.AdID";
-        $stmt = sqlsrv_query($conn,$sql);
-        if($stmt)
-        {
-            while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_NUMERIC) )
-            {
-?>
-                <tr>
-                    <th><?php echo $row[0]; ?></th>
-                    <th><?php echo $row[1]; ?></th>
-                    <th><?php echo $row[2]; ?></th>
-                    <th><?php echo $row[3]; ?></th>
-                    <th><?php echo $row[4]; ?></th>
-                    <th><?php echo $row[5]; ?></th>
-                    <th><?php echo $row[6]; ?></th>
-                    <th><?php echo $row[7]; ?></th>
-                    <th><?php echo $row[8]; ?></th>
-                    <th><?php echo $row[9]; ?></th>
-                    <th><?php echo $row[10]; ?></th>
-                    <th><?php echo $row[11]; ?></th>
-                </tr>	
-
-<?php
-            }
-
-        }   
-        else
-        {
-            die( print_r( sqlsrv_errors(), true) );
-        }
-    }
-
-?>
-
-<?php
-    if(isset($_POST['submit']))
-        {
-            $search = $_POST['search'];
-
-            sqlsrv_query($conn,"Alter Table Admin
-            Alter Column Age varchar(10)");
-            sqlsrv_query($conn,"Alter Table Admin
-            Alter Column PostalCode varchar(20)");
-            sqlsrv_query($conn,"Alter Table Admin
-            Alter Column DOB varchar(20)");
-
-            $sql1 = "Select Ad.AdID,FirstName,LastName,FatherName,age,Mobile_Number,City,Country,PostalCode,Institute,DOB,Email from Admin as Ad
-            inner join Account as A
-            on Ad.AdID = A.AdID
-            where 
-            Ad.AdID = '$search' OR 
-            FirstName = '$search' OR 
-            LastName = '$search' OR 
-            FatherName = '$search' OR  
-            Mobile_Number = '$search' OR 
-            City = '$search' OR 
-            Country = '$search' OR  
-            A.Email = '$search' OR 
-            Institute = '$search' OR 
-            Age = '$search' OR
-            PostalCode = '$search' OR
-            DOB = '$search';";
-            
-            $stmt1 = sqlsrv_query($conn,$sql1);
-
-                if($stmt1==true)
-                {
-?>
-            <style>
-                .row {
-                    display: none;
-                }
-            </style>
-<?php                    
-                    while( $row = sqlsrv_fetch_array( $stmt1, SQLSRV_FETCH_NUMERIC) )
-                    {
-?>
-            <tr class='search'>
-                <th><?php echo $row[0]; ?></th>
-                <th><?php echo $row[1]; ?></th>
-                <th><?php echo $row[2]; ?></th>
-                <th><?php echo $row[3]; ?></th>
-                <th><?php echo $row[4]; ?></th>
-                <th><?php echo $row[5]; ?></th>
-                <th><?php echo $row[6]; ?></th>
-                <th><?php echo $row[7]; ?></th>
-                <th><?php echo $row[8]; ?></th>
-                <th><?php echo $row[9]; ?></th>
-                <th><?php echo $row[10]; ?></th>
-                <th><?php echo $row[11]; ?></th>
+        <table>
+            <tr id='Main'>
+                <th>Admin ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Father Name</th>
+                <th>Age</th>
+                <th>Mobile Number</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Postal Code</th>
+                <th>Institute</th>
+                <th>Date of Birth</th>
+                <th>Email</th>
             </tr>
-
-<?php
-                    }
-                }
-                else
-                {
-                    die( print_r( sqlsrv_errors(), true) );
-                }
-                sqlsrv_query($conn,"Alter Table Admin
-                Alter Column Age int");
-                sqlsrv_query($conn,"Alter Table Admin
-                Alter Column PostalCode int");
-                sqlsrv_query($conn,"Alter Table Admin
-                Alter Column DOB Date");
-        }
-}
-?>
-
-    </Table>
-</div>
+            <?php foreach ($records as $row) { ?>
+                <tr class='row'>
+                    <th><?php echo htmlspecialchars($row[0]); ?></th>
+                    <th><?php echo htmlspecialchars($row[1]); ?></th>
+                    <th><?php echo htmlspecialchars($row[2]); ?></th>
+                    <th><?php echo htmlspecialchars($row[3]); ?></th>
+                    <th><?php echo htmlspecialchars($row[4]); ?></th>
+                    <th><?php echo htmlspecialchars($row[5]); ?></th>
+                    <th><?php echo htmlspecialchars($row[6]); ?></th>
+                    <th><?php echo htmlspecialchars($row[7]); ?></th>
+                    <th><?php echo htmlspecialchars($row[8]); ?></th>
+                    <th><?php echo htmlspecialchars($row[9]); ?></th>
+                    <th><?php echo htmlspecialchars($row[10]); ?></th>
+                    <th><?php echo htmlspecialchars($row[11]); ?></th>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
 </body>
 </html>

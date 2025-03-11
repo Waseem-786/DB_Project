@@ -1,3 +1,40 @@
+<?php
+$serverName = "localhost"; // Change this to your MySQL server name if different
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$database = "DB_Project"; // Your MySQL database name
+
+// Establish connection
+$conn = mysqli_connect($serverName, $username, $password, $database);
+
+if (!$conn) {
+    echo("Connection failed: ". mysqli_connect_error());
+    exit();
+}
+
+// Fetch all departments
+$deptQuery = "SELECT DeptID, DeptName FROM Department";
+$deptResult = mysqli_query($conn, $deptQuery);
+
+if (isset($_POST['button'])) {
+    $batch = mysqli_real_escape_string($conn, $_POST['batch']);
+    $section = mysqli_real_escape_string($conn, $_POST['section']);
+    $DID = mysqli_real_escape_string($conn, $_POST['DID']);
+
+    $sql = "INSERT INTO Batch (batch, DID) VALUES ('$batch', '$DID')";
+    $stmt1 = mysqli_query($conn, $sql);
+
+    $sql1 = "INSERT INTO Section (section, batch) VALUES ('$section', '$batch')";
+    $stmt = mysqli_query($conn, $sql1);
+
+    if (!$stmt1 || !$stmt) {
+        echo("Query failed: ". mysqli_error($conn));
+    }
+}
+
+mysqli_close($conn);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +46,6 @@
 </head>
 <body>
     <div class="body">
-
-    
         <div class="container">
             <h1>Add Batch in University</h1>
             <hr>
@@ -22,41 +57,17 @@
                 <label for="section">Default Section</label>
                 <input type="text" class="input" id="section" name="section" placeholder="Enter Section Name">
                 
-                <label for="DID">Department ID</label>
-                <input type="text" class="input" id="DID" name="DID" placeholder="Enter Department ID">
+                <label for="DID">Department</label>
+                <select class="input" id="DID" name="DID">
+                    <?php while ($row = mysqli_fetch_assoc($deptResult)) { ?>
+                        <option value="<?php echo $row['DeptID']; ?>"><?php echo $row['DeptName']; ?></option>
+                    <?php } ?>
+                </select>
                 
                 <input type="submit" name="button" class="input" id="button" value="Add Batch">
-                <a href="Admin_DashBoard.php" id="account">Don't Want to add Batch</a>
+                <a href="Admin_DashBoard.php?email=<?php echo $_GET['email']; ?>" id="account">Don't Want to add Batch</a>
             </form>
         </div>
     </div>
-
-<?php
-    
-$serverName = "WaseemPC,1433";
-$connectioninfo = array("DataBase"=>"DB_Project" , "UID"=>"sa", "PWD"=>"344673");
-$conn = sqlsrv_connect( $serverName, $connectioninfo );
-  
-if($conn)
-{
-    if(isset($_POST['button']))
-    {
-        $batch = $_POST['batch'];
-        $section = $_POST['section'];
-        $DID = $_POST['DID'];
-        $sql = "insert into Batch values('$batch','$DID');";
-        $stmt1 = sqlsrv_query($conn,$sql);
-
-        $sql1 = "insert into Section values('$section','$batch');";
-        $stmt = sqlsrv_query($conn,$sql1);
-    }
-    else
-    {
-        die(print_r(sqlsrv_errors(),true));
-    }
-}
-?>
-    
-                
 </body>
 </html>

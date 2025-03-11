@@ -1,3 +1,72 @@
+<?php
+$serverName = "localhost"; // Change this to your MySQL server name if different
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$database = "DB_Project"; // Your MySQL database name
+
+// Establish connection
+$conn = mysqli_connect($serverName, $username, $password, $database);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Fetch batches
+$batchQuery = "SELECT DISTINCT Batch FROM Batch";
+$batchResult = mysqli_query($conn, $batchQuery);
+
+// Fetch sections
+$sectionQuery = "SELECT DISTINCT Section FROM Section";
+$sectionResult = mysqli_query($conn, $sectionQuery);
+
+// Fetch faculty
+$facultyQuery = "SELECT FacID, CONCAT(FirstName, ' ', LastName) AS FacultyName FROM Faculty";
+$facultyResult = mysqli_query($conn, $facultyQuery);
+
+// Fetch courses
+$courseQuery = "SELECT CrsID, CrsName FROM Course";
+$courseResult = mysqli_query($conn, $courseQuery);
+
+if (isset($_POST['button'])) {
+    $cname = $_POST['cname'];
+    $batch = $_POST['batch'];
+    $section = $_POST['section'];
+    $FID = $_POST['FID'];
+    $start_time = $_POST['start_time'];
+    $end_time = $_POST['end_time'];
+    $CrsID = $_POST['CrsID'];
+    $start = $_POST['start'];
+    $end = $_POST['end'];
+
+    // Check if Faculty ID exists
+    $checkFaculty = "SELECT FacID FROM Faculty WHERE FacID = '$FID'";
+    $resultFaculty = mysqli_query($conn, $checkFaculty);
+
+    if (mysqli_num_rows($resultFaculty) > 0) {
+        // Faculty exists, proceed with the insertion
+        $sql = "INSERT INTO Fac_Sec (ClassName, Batch, Section, FacID, Class_Start_Time, Class_End_Time) 
+                VALUES ('$cname', '$batch', '$section', '$FID', '$start_time', '$end_time')";
+
+        $sql1 = "INSERT INTO Fac_Crs (FacID, CrsID, Crs_Start_Date, Crs_End_Date) 
+                VALUES ('$FID', '$CrsID', '$start', '$end')";
+
+        if (mysqli_query($conn, $sql) && mysqli_query($conn, $sql1)) {
+            echo "Class and Course assigned successfully!";
+        } else {
+            echo "Error: " . mysqli_error($conn);
+        }
+    } else {
+        echo "FacID: $FID";
+        echo "batch: $batch";
+        echo "section: $section";
+        echo "Error: Faculty ID does not exist!";
+    }
+}
+
+mysqli_close($conn);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +78,6 @@
 </head>
 <body>
     <div class="body">
-
-    
         <div class="container">
             <h1>Classes Assigned to Faculty</h1>
             <hr>
@@ -28,69 +95,50 @@
                 </select>
                 
                 <label for="batch">Batch</label>
-                <input type="text" class="input" id="batch" name="batch" placeholder="Enter Batch Name">
-    
+                <select name="batch" id="batch" class="input">
+                    <?php while ($row = mysqli_fetch_assoc($batchResult)) { ?>
+                        <option value="<?php echo $row['Batch']; ?>"><?php echo $row['Batch']; ?></option>
+                    <?php } ?>
+                </select>
+
                 <label for="section">Section</label>
-                <input type="text" class="input" id="section" name="section" placeholder="Enter Section name">
+                <select name="section" id="section" class="input">
+                    <?php while ($row = mysqli_fetch_assoc($sectionResult)) { ?>
+                        <option value="<?php echo $row['Section']; ?>"><?php echo $row['Section']; ?></option>
+                    <?php } ?>
+                </select>
                 
-                <label for="FID">Faculty ID</label>
-                <input type="text" class="input" id="FID" name="FID" placeholder="Enter Faculty ID">
+                <label for="FID">Faculty</label>
+                <select name="FID" id="FID" class="input">
+                    <?php while ($row = mysqli_fetch_assoc($facultyResult)) { ?>
+                        <option value="<?php echo $row['FacID']; ?>"><?php echo $row['FacultyName']; ?></option>
+                    <?php } ?>
+                </select>
+
                 
+                <label for="CrsID">Course</label>
+                <select name="CrsID" id="CrsID" class="input">
+                    <?php while ($row = mysqli_fetch_assoc($courseResult)) { ?>
+                        <option value="<?php echo $row['CrsID']; ?>"><?php echo $row['CrsName']; ?></option>
+                    <?php } ?>
+                </select>
+    
                 <label for="start_time">Class Start Time</label>
-                <input type="time" class="input" name="start_time" id="start_time" placeholder="Enter Class Start time">
+                <input type="time" class="input" name="start_time" id="start_time">
                 
                 <label for="end_time">Class End Time</label>
-                <input type="time" class="input" name="end_time" id="end_time" placeholder="Enter Class End time">
-
-                <label for="CrsID">Course ID</label>
-                <input type="text" class="input" id="CrsID" name="CrsID" placeholder="Enter Course ID">
+                <input type="time" class="input" name="end_time" id="end_time">
     
                 <label for="start">Course Start Date</label>
-                <input type="date" class="input" id="start" name="start" placeholder="Enter Course Start Date">
+                <input type="date" class="input" id="start" name="start">
                 
                 <label for="end">Course End Date</label>
-                <input type="date" class="input" id="end" name="end" placeholder="Enter Course End Date">
+                <input type="date" class="input" id="end" name="end">
                 
                 <input type="submit" name="button" class="input" id="button" value="Add Course">
-                <a href="Admin_DashBoard.php" id="account">Don't Want to add Course</a>
-
+                <a href="Admin_DashBoard.php?email=<?php echo $_GET['email']; ?>" id="account">Don't Want to add Course</a>
             </form>
         </div>
     </div>
-                
-<?php
-    
-$serverName = "WaseemPC,1433";
-$connectioninfo = array("DataBase"=>"DB_Project" , "UID"=>"sa", "PWD"=>"344673");
-$conn = sqlsrv_connect( $serverName, $connectioninfo );
-  
-if($conn)
-{
-
-    if(isset($_POST['button']))
-    {
-        $cname = $_POST['cname'];
-        $batch = $_POST['batch'];
-        $section = $_POST['section'];
-        $FID = $_POST['FID'];
-        $start_time = $_POST['start_time'];
-        $end_time = $_POST['end_time'];
-        $CrsID = $_POST['CrsID'];
-        $start = $_POST['start'];
-        $end = $_POST['end'];
-
-        $sql = "insert into Fac_Sec values('$cname','$batch','$section','$FID','$start_time','$end_time');";
-        $stmt = sqlsrv_query($conn,$sql);
-
-        $sql1 = "insert into Fac_Crs values('$FID','$CrsID','$start','$end');";
-        $stmt1 = sqlsrv_query($conn,$sql1);
-    }
-    else
-    {
-        die(print_r(sqlsrv_errors(),true));
-    }
-}
-?>
-    
 </body>
 </html>

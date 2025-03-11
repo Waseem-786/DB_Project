@@ -1,3 +1,48 @@
+<?php
+$serverName = "localhost"; // Change this to your MySQL server name if different
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$database = "DB_Project"; // Your MySQL database name
+
+// Establish connection
+$conn = mysqli_connect($serverName, $username, $password, $database);
+
+if (!$conn) {
+    echo "Connection failed: " . mysqli_connect_error();
+    exit();
+}
+
+// Fetch all courses for prerequisite selection
+$courseQuery = "SELECT CrsName FROM Course";
+$courseResult = mysqli_query($conn, $courseQuery);
+
+if (isset($_POST['button'])) {
+    $CrsID = mysqli_real_escape_string($conn, $_POST['CrsID']);
+    $CrsName = mysqli_real_escape_string($conn, $_POST['CrsName']);
+    $P_CrsName = mysqli_real_escape_string($conn, $_POST['P_CrsName']);
+    $hours = mysqli_real_escape_string($conn, $_POST['hours']);
+
+    $pre = "NULL"; // Default to NULL
+    if ($P_CrsName != "NULL" && $P_CrsName != "none") {
+        $sql1 = "SELECT CrsID FROM Course WHERE CrsName = '$P_CrsName'";
+        $stmt1 = mysqli_query($conn, $sql1);
+        if ($row1 = mysqli_fetch_array($stmt1, MYSQLI_NUM)) {
+            $pre = "'" . $row1[0] . "'"; // Properly format for SQL query
+        }
+    }
+
+    $sql3 = "INSERT INTO Course (CrsID, CrsName, CreditHours, Pre_Req) VALUES ('$CrsID', '$CrsName', $hours, $pre)";
+    $stmt3 = mysqli_query($conn, $sql3);
+
+    
+    if (!$stmt3) {
+        echo "'Query failed: " . mysqli_error($conn);
+    }
+}
+
+mysqli_close($conn);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +54,6 @@
 </head>
 <body>
     <div class="body">
-
-    
         <div class="container">
             <h1>Add Course in University</h1>
             <hr>
@@ -34,61 +77,15 @@
                 <select name="P_CrsName" id="P_CrsName" class="input">
                     <option value="none">Choose Pre Req</option>
                     <option value="NULL">NULL</option>
+                    <?php while ($row = mysqli_fetch_assoc($courseResult)) { ?>
+                        <option value="<?php echo $row['CrsName']; ?>"><?php echo $row['CrsName']; ?></option>
+                    <?php } ?>
+                </select>
                 
-<?php
-    
-$serverName = "WaseemPC,1433";
-$connectioninfo = array("DataBase"=>"DB_Project" , "UID"=>"sa", "PWD"=>"344673");
-$conn = sqlsrv_connect( $serverName, $connectioninfo );
-  
-if($conn)
-{
-    $sql = "Select distinct(CrsName) from Course ;";
-    $stmt = sqlsrv_query($conn,$sql);
-    while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_NUMERIC) )
-    {
-        $name = $row[0];
-?>
-            <option value="<?php echo $name;?>"><?php echo $name;?></option>
-<?php            
-    }
-?>
-
-</select>
-        <input type="submit" name="button" class="input" id="button" value="Add Course">
-        <a href="Admin_DashBoard.html" id="account">Don't Want to add Course</a>
-
-        </form>
+                <input type="submit" name="button" class="input" id="button" value="Add Course">
+                <a href="Admin_DashBoard.php?email=<?php echo $_GET['email']; ?>" id="account">Don't Want to add Course</a>
+            </form>
+        </div>
     </div>
-</div>
-
-<?php    
-    if(isset($_POST['button']))
-    {
-        $CrsID = $_POST['CrsID'];
-        $CrsName = $_POST['CrsName'];
-        $P_CrsName = $_POST['P_CrsName'];
-        $hours = $_POST['hours'];
-
-        $sql1 = "Select CrsID from Course where CrsName = '$P_CrsName';";
-        $stmt1 = sqlsrv_query($conn,$sql1);
-        while( $row1 = sqlsrv_fetch_array( $stmt1, SQLSRV_FETCH_NUMERIC) )
-        {
-            $pre = $row1[0];
-        }
-        $sql3 = "insert into Course values('$CrsID','$CrsName',$hours,'$pre');";
-        $stmt3 = sqlsrv_query($conn,$sql3);
-    }
-    else
-    {
-        die(print_r(sqlsrv_errors(),true));
-    }
-}
-?>
-    
-        
-
-                
-                
 </body>
 </html>

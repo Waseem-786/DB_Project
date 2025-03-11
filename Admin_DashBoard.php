@@ -34,7 +34,6 @@
                             src="Icons/result.png" alt="Loading"></a>
                     <p id="text-6">Result</p>
                 </li>
-
                 <li class="list" id="list-7" onmouseover="showtext(7)" onmouseout="hidetext(7)"><a href=""><img
                             src="Icons/feedback.png" alt="Loading"></a>
                     <p id="text-7">Feedback</p>
@@ -42,41 +41,45 @@
             </ul>
         </nav>
 
-
         <section>
-            <!-- This is Section -->
             <div class="logo">
-
                 <img src="/DB_Project/Images/LMS Logo.png" alt="Loading">
-
                 <div class="right">
                     <span id='currentDate'></span>
                 </div>
             </div>
             <div class="profile">
                 <img src="/DB_Project/Images/Ali_Tahir.jpeg" alt="Add Pic">
-
-<?php
-$email = $_GET['email'];
-$ServerName = "WASEEMPC,1433";
-$connectioninfo = array("Database"=>"DB_Project","UID"=>"sa","PWD"=>"344673");
-$conn = sqlsrv_connect($ServerName,$connectioninfo);
-if($conn)
-{
-    $sql = "Select Ad.FirstName,Ad.LastName from Admin as Ad
-            where Ad.AdID = (Select A.AdID from Account as A
-                            where A.Email = '$email' AND A.Type ='Admin');";
-    $stmt = sqlsrv_query($conn,$sql);
-    
-    $name = "";
-    while( $row = sqlsrv_fetch_array($stmt,SQLSRV_FETCH_NUMERIC))
-    {
-        $name = $row[0];
-        $name = $name." ";
-        $name = $name.$row[1];
-    }
-}
-?>
+                
+                <?php
+                $email = $_GET['email'];
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "DB_Project";
+                
+                // Create connection
+                $conn = new mysqli($servername, $username, $password, $dbname);
+                
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                
+                $sql = "SELECT Ad.FirstName, Ad.LastName FROM Admin AS Ad
+                        WHERE Ad.AdID = (SELECT A.AdID FROM Account AS A
+                                        WHERE A.Email = '$email' AND A.Type ='Admin')";
+                
+                $result = $conn->query($sql);
+                $name = "";
+                
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $name = $row["FirstName"] . " " . $row["LastName"];
+                    }
+                }
+                $conn->close();
+                ?>
                 <span>
                     <?php echo $name; ?>
                 </span>
@@ -86,20 +89,20 @@ if($conn)
             <div class="courses">
                 <span>My Working</span>
                 <div class="subjects">
-                    <div class="subject" id="subject_1"><a href="Student_Record.php">Student records</a></div>
-                    <div class="subject" id="subject_2"><a href="Faculty_Record.php">Faculty records</a></div>
-                    <div class="subject" id="subject_3"><a href="Admin_Record.php">Admin records</a></div>
-                    <div class="subject" id="subject_4"><a href="Signup.php">Create Account</a></div>
-                    <div class="subject" id="subject_5"><a href="Delete_Account.php">Delete Account</a></div>
-                    <div class="subject" id="subject_6"><a href="Add_Course.php">Add Course</a> </div>
-                    <div class="subject" id="subject_7"><a href="Course_Record.php">Courses Records</a> </div>
-                    <div class="subject" id="subject_8"><a href="Student_Enroll_in_Course.php">Student Enrollment in Courses</a> </div>
-                    <div class="subject" id="subject_9"><a href="Std-Crs_Record.php">Student Courses Relation</a> </div>
-                    <div class="subject" id="subject_10"><a href="Add_Department.php">Add Department</a> </div>
-                    <div class="subject" id="subject_11"><a href="Add_Batch.php">Add Batch</a> </div>
-                    <div class="subject" id="subject_12"><a href="Add_Section.php">Add Section</a> </div>
-                    <div class="subject" id="subject_13"><a href="Class_Course_Assign_to_Faculty.php">Classes/Courses Assigned to Faculty</a> </div>
-                    <div class="subject" id="subject_13"><a href="Fac-Sec_Record.php">Class Faculty Relation</a> </div>
+                    <div class="subject" id="subject_1"><a href="Student_Record.php?email=<?php echo $email; ?>">Student records</a></div>
+                    <div class="subject" id="subject_2"><a href="Faculty_Record.php?email=<?php echo $email; ?>">Faculty records</a></div>
+                    <div class="subject" id="subject_3"><a href="Admin_Record.php?email=<?php echo $email; ?>">Admin records</a></div>
+                    <div class="subject" id="subject_4"><a href="Signup.php?email=<?php echo $email; ?>">Create Account</a></div>
+                    <div class="subject" id="subject_5"><a href="Delete_Account.php?email=<?php echo $email; ?>">Delete Account</a></div>
+                    <div class="subject" id="subject_6"><a href="Add_Course.php?email=<?php echo $email; ?>">Add Course</a> </div>
+                    <div class="subject" id="subject_7"><a href="Course_Record.php?email=<?php echo $email; ?>">Courses Records</a> </div>
+                    <div class="subject" id="subject_8"><a href="Student_Enroll_in_Course.php?email=<?php echo $email; ?>">Student Enrollment in Courses</a> </div>
+                    <div class="subject" id="subject_9"><a href="Std-Crs_Record.php?email=<?php echo $email; ?>">Student Courses Relation</a> </div>
+                    <div class="subject" id="subject_10"><a href="Add_Department.php?email=<?php echo $email; ?>">Add Department</a> </div>
+                    <div class="subject" id="subject_11"><a href="Add_Batch.php?email=<?php echo $email; ?>">Add Batch</a> </div>
+                    <div class="subject" id="subject_12"><a href="Add_Section.php?email=<?php echo $email; ?>">Add Section</a> </div>
+                    <div class="subject" id="subject_13"><a href="Class_Course_Assign_to_Faculty.php?email=<?php echo $email; ?>">Classes/Courses Assigned to Faculty</a> </div>
+                    <div class="subject" id="subject_13"><a href="Fac-Sec_Record.php?email=<?php echo $email; ?>">Class Faculty Relation</a> </div>
                 </div>
             </div>
             <div id="Contact_us">
@@ -191,3 +194,4 @@ if($conn)
 </body>
 
 </html>
+

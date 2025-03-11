@@ -1,6 +1,52 @@
+<?php
+$serverName = "localhost"; // Change this to your MySQL server name if different
+$username = "root"; // Your MySQL username
+$password = ""; // Your MySQL password
+$database = "DB_Project"; // Your MySQL database name
+
+// Establish connection
+$conn = mysqli_connect($serverName, $username, $password, $database);
+
+if (!$conn) {
+    echo "Connection failed: " . mysqli_connect_error();
+    exit();
+}
+
+$courses = [];
+if (!isset($_POST['submit'])) { // Default and Show All Condition
+    $sql = "SELECT * FROM Course";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+        while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
+            $courses[] = $row;
+        }
+    } else {
+        echo "Query failed: " . mysqli_error($conn);
+    }
+}
+
+if (isset($_POST['submit'])) {
+    $search = mysqli_real_escape_string($conn, $_POST['search']);
+
+    $sql1 = "SELECT * FROM Course WHERE CrsID = '$search' OR CrsName = '$search' OR CreditHours = '$search' OR Pre_Req = '$search'";
+    $result1 = mysqli_query($conn, $sql1);
+
+    if ($result1) {
+        
+        while ($row = mysqli_fetch_array($result1, MYSQLI_NUM)) {
+            $courses[] = $row;
+        }
+    } else {
+        echo "Query failed: " . mysqli_error($conn);
+    }
+}
+
+mysqli_close($conn);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +54,6 @@
     <title>Course Record</title>
     <link rel="stylesheet" href="Student_Record.css">
 </head>
-
 <body>
     <div class="container">
         <div class="nav">
@@ -20,101 +65,22 @@
             </form>
         </div>
 
-        <Table>
+        <table>
             <tr id='Main'>
                 <th>Course ID</th>
                 <th>Course Name</th>
                 <th>Credit Hours</th>
                 <th>Pre Req</th>
             </tr>
-
-<?php
-
-$serverName = "WaseemPC";
-$connectioninfo = array("DataBase"=>"DB_Project" , "UID"=>"sa", "PWD"=>"344673");
-$conn = sqlsrv_connect( $serverName, $connectioninfo );
-
-if($conn)
-{
-    if(isset($_POST['submit'])==false)  //Default and Show All Condition
-    {
-
-        $sql = "Select * from Course";
-        $stmt = sqlsrv_query($conn,$sql);
-        if($stmt)
-        {
-            while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_NUMERIC) )
-            {
-    
-?>
+            <?php foreach ($courses as $row) { ?>
                 <tr class='row'>
                     <th><?php echo $row[0]; ?></th>
                     <th><?php echo $row[1]; ?></th>
                     <th><?php echo $row[2]; ?></th>
-                    <th><?php echo $row[3]; ?></th>
+                    <th><?php echo $row[3] ? $row[3] : 'NULL'; ?></th>
                 </tr>
-
-<?php
-            }
-        }
-        else
-        {
-            die( print_r( sqlsrv_errors(), true) );
-        }
-    }
-?>
-
-
-<?php
-    if(isset($_POST['submit']))
-        {
-            $search = $_POST['search'];
-
-            sqlsrv_query($conn,"Alter Table Course
-            Alter Column CreditHours varchar(10)");
-
-            $sql1 = "Select * from Course
-            where 
-            CrsID = '$search' OR 
-            CrsName = '$search' OR 
-            CreditHours = $search OR 
-            Pre_Req = '$search';";
-            
-            $stmt1 = sqlsrv_query($conn,$sql1);
-
-                if($stmt1==true)
-                {
-?>
-            <style>
-                .row {
-                    display: none;
-                }
-            </style>
-<?php                    
-                    while( $row = sqlsrv_fetch_array( $stmt1, SQLSRV_FETCH_NUMERIC) )
-                    {
-?>
-            <tr class='search'>
-                <th><?php echo $row[0]; ?></th>
-                <th><?php echo $row[1]; ?></th>
-                <th><?php echo $row[2]; ?></th>
-                <th><?php echo $row[3]; ?></th>
-            </tr>
-
-<?php
-                    }
-                }
-                else
-                {
-                    die( print_r( sqlsrv_errors(), true) );
-                }
-                sqlsrv_query($conn,"Alter Table Course
-                Alter Column CreditHours int");
-        }
-}
-?>
-        </Table>
+            <?php } ?>
+        </table>
     </div>
 </body>
-
 </html>

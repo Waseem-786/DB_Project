@@ -14,116 +14,92 @@
         <nav>
             <ul>
                 <li id="list-1"><img src="Icons/menu.png" alt="Loading"></li>
-                <li class="list" id="list-2" onmouseover="showtext(2)" onmouseout="hidetext(2)"><a href=""><img
-                            src="Icons/dashboard.png" alt="Loading"></a>
+                <li class="list" id="list-2"><a href=""><img src="Icons/dashboard.png" alt="Loading"></a>
                     <p id="text-2">DashBoard</p>
                 </li>
-                <li class="list" id="list-3" onmouseover="showtext(3)" onmouseout="hidetext(3)"><a href=""><img
-                            src="Icons/home.png" alt="Loading"></a>
+                <li class="list" id="list-3"><a href=""><img src="Icons/home.png" alt="Loading"></a>
                     <p id="text-3">Home</p>
                 </li>
-                <li class="list" id="list-4" onmouseover="showtext(4)" onmouseout="hidetext(4)"><a href=""><img
-                            src="Icons/view-shedule.png" alt="Loading"></a>
-                    <p id="text-4">Calender</p>
+                <li class="list" id="list-4"><a href=""><img src="Icons/view-shedule.png" alt="Loading"></a>
+                    <p id="text-4">Calendar</p>
                 </li>
-                <li class="list" id="list-5" onmouseover="showtext(5)" onmouseout="hidetext(5)"><a href=""><img
-                            src="Icons/education.png" alt="Loading"></a>
+                <li class="list" id="list-5"><a href=""><img src="Icons/education.png" alt="Loading"></a>
                     <p id="text-5">My Courses</p>
                 </li>
-                <li class="list" id="list-6" onmouseover="showtext(6)" onmouseout="hidetext(6)"><a href=""><img
-                            src="Icons/result.png" alt="Loading"></a>
+                <li class="list" id="list-6"><a href=""><img src="Icons/result.png" alt="Loading"></a>
                     <p id="text-6">Result</p>
                 </li>
-
-                <li class="list" id="list-7" onmouseover="showtext(7)" onmouseout="hidetext(7)"><a href=""><img
-                            src="Icons/files.png" alt="Loading"></a>
+                <li class="list" id="list-7"><a href=""><img src="Icons/files.png" alt="Loading"></a>
                     <p id="text-7">Private Files</p>
                 </li>
             </ul>
         </nav>
 
-
         <section>
-            <!-- This is Section -->
             <div class="logo">
-
                 <img src="/DB_Project/Images/LMS Logo.png" alt="Loading">
-
                 <div class="right">
                     <span id='currentDate'></span>
                 </div>
             </div>
             <div class="profile">
-                <img src="/DB_Project/Images/image1.jpg" alt="Add Pic">
-
-
-<?php
-$email = $_GET['email'];
-
-$ServerName = "WASEEMPC,1433";
-$connectioninfo = array("Database"=>"DB_Project","UID"=>"sa","PWD"=>"344673");
-$conn = sqlsrv_connect($ServerName,$connectioninfo);
-if($conn)
-{
-    $sql = "Select S.FirstName,S.LastName from Student as S
-            where S.StdID = (Select A.StdID from Account as A
-                            where A.Email = '$email' AND A.Type ='Student');";
-    $stmt = sqlsrv_query($conn,$sql);
-    
-    $name = "";
-    while( $row = sqlsrv_fetch_array($stmt,SQLSRV_FETCH_NUMERIC))
-    {
-        $name = $row[0];
-        $name = $name." ";
-        $name = $name.$row[1];
-        $sql1 = "Select StdID from Student where FirstName = '$row[0]'";
-        $stmt1 = sqlsrv_query($conn,$sql1);
-    }
-
-?>                
-                <span>
-                    <?php echo $name; ?>
-                </span>
-                <a href="/DB_Project/Student_Edit_Profile.php"><input type="button" value="Edit_Profile"></a>
-
+                <?php
+                $email = $_GET['email'];
+                $conn = new mysqli("localhost", "root", "", "DB_Project");
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                
+                $sql3 = "SELECT Std_Image FROM Student INNER JOIN Account ON Account.StdID = Student.StdID WHERE Account.Email = '$email' AND Account.type = 'Student'";
+                $result3 = $conn->query($sql3);
+                if ($result3->num_rows > 0) {
+                    $row3 = $result3->fetch_assoc();
+                ?>
+                <img src="<?php echo $row3['Std_Image']; ?>" alt="Profile Picture">
+                <?php }
+                
+                $sql = "SELECT FirstName, LastName FROM Student WHERE StdID = (SELECT StdID FROM Account WHERE Email = '$email' AND Type = 'Student')";
+                $result = $conn->query($sql);
+                $name = "";
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $name = $row["FirstName"] . " " . $row["LastName"];
+                    }
+                }
+                ?>
+                <span><?php echo $name; ?></span>
+                <a href="/DB_Project/Student_Edit_Profile.php?email=<?php echo $email; ?>&type=Student"><input type="button" value="Edit Profile"></a>
             </div>
             <div class="courses">
-                <span>Enrolled Sujects/Courses</span>
+                <span>Enrolled Subjects/Courses</span>
                 <div class="subjects">
-<?php
-
-while($row1 = sqlsrv_fetch_array($stmt1,SQLSRV_FETCH_NUMERIC))
-{
-    $StdID =  $row1[0];
-}
-
-$sql2 = "Select C.CrsName,C.CreditHours,F.FirstName,F.LastName,FS.ClassName,FS.Class_Start_Time,
-        FS.Class_end_Time from Course as C
-        inner join Std_Crs SC
-        on SC.CrsID = C.CrsID
-        inner join Fac_Crs as FC
-        on C.CrsID = FC.CrsID
-        inner join Faculty as F
-        on F.FacID = FC.FacID
-        inner join Fac_Sec as FS
-        on FS.FacID = F.FacID
-        where SC.StdID = '$StdID';";
-$stmt2 = sqlsrv_query($conn,$sql2);
-while($row2 = sqlsrv_fetch_array($stmt2,SQLSRV_FETCH_NUMERIC))
-{
-?>
-    <div class="subject">
-        <p id="Crs"><?php echo $row2[0];?></p>
-        <p> Credit Hours : <?php echo $row2[1]; ?></p>
-        <p> Instructor : <?php echo $row2[2]." ".$row2[3]; ?></p>
-        <p> Class Name : <?php echo $row2[4]; ?></p>
-        <p> Start Time : <?php echo $row2[5]; ?></p>
-        <p> End Time : <?php echo $row2[6]; ?></p>
-    </div>
-<?php
-}
-}
-?>
+                <?php
+                $sql1 = "SELECT StdID FROM Student WHERE FirstName = (SELECT FirstName FROM Student WHERE StdID = (SELECT StdID FROM Account WHERE Email = '$email' AND Type = 'Student'))";
+                $result1 = $conn->query($sql1);
+                $StdID = "";
+                if ($result1->num_rows > 0) {
+                    while ($row1 = $result1->fetch_assoc()) {
+                        $StdID = $row1['StdID'];
+                    }
+                }
+                
+                $sql2 = "SELECT Course.CrsName, Course.CreditHours, Faculty.FirstName, Faculty.LastName, Fac_Sec.ClassName, Fac_Sec.Class_Start_Time, Fac_Sec.Class_end_Time FROM Course INNER JOIN Std_Crs ON Std_Crs.CrsID = Course.CrsID INNER JOIN Fac_Crs ON Course.CrsID = Fac_Crs.CrsID INNER JOIN Faculty ON Faculty.FacID = Fac_Crs.FacID INNER JOIN Fac_Sec ON Fac_Sec.FacID = Faculty.FacID WHERE Std_Crs.StdID = '$StdID'";
+                $result2 = $conn->query($sql2);
+                if ($result2->num_rows > 0) {
+                    while ($row2 = $result2->fetch_assoc()) {
+                ?>
+                <div class="subject">
+                    <p id="Crs"><?php echo $row2['CrsName']; ?></p>
+                    <p>Credit Hours: <?php echo $row2['CreditHours']; ?></p>
+                    <p>Instructor: <?php echo $row2['FirstName'] . " " . $row2['LastName']; ?></p>
+                    <p>Class Name: <?php echo $row2['ClassName']; ?></p>
+                    <p>Start Time: <?php echo $row2['Class_Start_Time']; ?></p>
+                    <p>End Time: <?php echo $row2['Class_end_Time']; ?></p>
+                </div>
+                <?php
+                    }
+                }
+                ?>
                 </div>
             </div>
             <div id="Contact_us">
@@ -148,13 +124,8 @@ while($row2 = sqlsrv_fetch_array($stmt2,SQLSRV_FETCH_NUMERIC))
         </section>
     </div>
 
-
     <script>
-        let t = new Date();
-
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-        document.getElementById("currentDate").innerHTML = monthNames[t.getMonth()] + ", " + t.getDate() + " " + t.getFullYear() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
+        document.getElementById("currentDate").innerHTML = new Date().toLocaleString();
     </script>
 
     <script>
@@ -212,8 +183,5 @@ while($row2 = sqlsrv_fetch_array($stmt2,SQLSRV_FETCH_NUMERIC))
         }
     </script>
 
-
-
 </body>
-
 </html>

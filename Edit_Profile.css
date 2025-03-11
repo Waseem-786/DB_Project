@@ -112,3 +112,8 @@ section{
     width: 250px;
     height: 30px;
 }
+#button{
+    background-color: #1177d1;
+    width: 30%;
+    height: 40px;
+}
